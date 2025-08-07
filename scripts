@@ -1,0 +1,12 @@
+API RESTFul para Microservices: Do Básico ao Avançado
+=====================================================
+
+- Mapeamentos com Spring Data JPA
+
+insert into tb_users(user_id,username,email,password,full_name,user_status,user_type,phone_number,creation_date,last_update_date)
+values('b015c717-5fa3-43fb-93f6-ac07904a956f','johnoliver','john.oliver@example.com','Ab123456#','John Oliver','ACTIVE','USER','11985963214',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+
+insert into tb_users(user_id,username,email,password,full_name,user_status,user_type,phone_number,creation_date,last_update_date)
+values(gen_random_uuid(),'emilysilver','emilysilver@example.com','Dd111333#','Emily Silver','ACTIVE','USER','15963256985',CURRENT_TIMESTAMP,CURRENT_TIMESTAMP);
+
+select * from tb_users;
