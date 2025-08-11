@@ -12,12 +12,24 @@ import java.util.UUID;
 
 @Repository
 public interface ModuleRepository extends JpaRepository<ModuleModel, UUID> {
+    @Query(value = "select * from tb_modules where course_course_id = :courseId", nativeQuery = true)
+    List<ModuleModel> findAllModulesIntoCourse(@Param("courseId") UUID courseId);
+
+
+
+    //--> Example EntityGraph
     // o EntityGraph faz com que os dados do course sejam carregados como eager (traz todos os dados),
     // mesmo que o course esteja marcado como lazy (traz apenas o idCourse) no ModuleModel
+
     //    @EntityGraph(attributePaths ={"course"})
     //    ModuleModel findByTitulo(String title);
 
-//    @Modifying é utilizado junto com @Query, quando se trata de update ou delete
-    @Query(value = "select * from tb_modules where course_course_id = :courseId", nativeQuery = true)
-    List<ModuleModel> findAllModulesIntoCourse(@Param("courseId") UUID courseId);
+    //--> Example Modifying
+    //    É utilizado em conjunto com @Query, quando se trata de update ou delete
+
+    //    @Modifying
+    //    @Query(value = "select * from tb_modules where course_course_id = :courseId", nativeQuery = true)
+    //    List<ModuleModel> findAllModulesIntoCourse(@Param("courseId") UUID courseId);
+
+
 }
