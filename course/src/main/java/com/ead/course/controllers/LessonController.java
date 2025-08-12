@@ -1,9 +1,7 @@
 package com.ead.course.controllers;
 
 import com.ead.course.dtos.LessonRecordDto;
-import com.ead.course.dtos.ModuleRecordDto;
 import com.ead.course.models.LessonModel;
-import com.ead.course.repositories.LessonRepository;
 import com.ead.course.services.LessonService;
 import com.ead.course.services.ModuleService;
 import jakarta.validation.Valid;
@@ -25,7 +23,7 @@ public class LessonController {
     public ResponseEntity<Object> saveLesson(@PathVariable(value = "moduleId") UUID moduleId,
                                              @RequestBody @Valid LessonRecordDto lessonRecordDto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(lessonService.save(lessonRecordDto, moduleService.findById(moduleId).get()));
+                .body(lessonService.save(lessonRecordDto, moduleService.findById(moduleId)));
     }
 
     @GetMapping("/modules/{moduleId}/lessons")
@@ -36,13 +34,13 @@ public class LessonController {
     @GetMapping("/modules/{moduleId}/lessons/{lessonId}")
     public ResponseEntity<Object> getOneLesson(@PathVariable(value = "moduleId") UUID moduleId,
                                                @PathVariable(value = "lessonId") UUID lessonId){
-        return ResponseEntity.status(HttpStatus.OK).body(lessonService.findLessonIntoModule(moduleId, lessonId).get());
+        return ResponseEntity.status(HttpStatus.OK).body(lessonService.findLessonIntoModule(moduleId, lessonId));
     }
 
     @DeleteMapping("/modules/{moduleId}/lessons/{lessonId}")
     public ResponseEntity<Object> deleteLesson(@PathVariable(value = "moduleId") UUID moduleId,
                                                @PathVariable(value = "lessonId") UUID lessonId){
-        var lessonModel = lessonService.findLessonIntoModule(moduleId, lessonId).get();
+        var lessonModel = lessonService.findLessonIntoModule(moduleId, lessonId);
         lessonService.delete(lessonModel);
         return ResponseEntity.status(HttpStatus.OK).body("Lesson deleted successfully.");
     }
@@ -51,7 +49,7 @@ public class LessonController {
     public ResponseEntity<Object> updateLesson(@PathVariable(value = "moduleId") UUID moduleId,
                                                @PathVariable(value = "lessonId") UUID lessonId,
                                                @RequestBody @Valid LessonRecordDto lessonRecordDto) {
-        var lessonModel = lessonService.findLessonIntoModule(moduleId, lessonId).get();
+        var lessonModel = lessonService.findLessonIntoModule(moduleId, lessonId);
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(lessonService.update(lessonRecordDto, lessonModel));
