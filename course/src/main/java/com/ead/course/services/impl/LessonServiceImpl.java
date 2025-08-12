@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -23,6 +26,28 @@ public class LessonServiceImpl implements LessonService {
         BeanUtils.copyProperties(lessonRecordDto, lessonModel);
         lessonModel.setCreationDate(LocalDateTime.now(ZoneId.of("UTC")));
         lessonModel.setModule(moduleModel);
+
+        return lessonRepository.save(lessonModel);
+    }
+
+    @Override
+    public List<LessonModel> findAllLessonsIntoModule(UUID moduleId) {
+        return lessonRepository.findAllLessonsIntoModule(moduleId);
+    }
+
+    @Override
+    public Optional<LessonModel> findLessonIntoModule(UUID moduleId, UUID lessonId) {
+        return lessonRepository.findLessonIntoModule(moduleId, lessonId);
+    }
+
+    @Override
+    public void delete(LessonModel lessonModel) {
+        lessonRepository.delete(lessonModel);
+    }
+
+    @Override
+    public LessonModel update(LessonRecordDto lessonRecordDto, LessonModel lessonModel) {
+        BeanUtils.copyProperties(lessonRecordDto, lessonModel);
 
         return lessonRepository.save(lessonModel);
     }
