@@ -26,5 +26,5 @@ logging:
   level:
     com.ead: TRACE
     root: INFO
-#    org.springframework.web: DEBUG   Caso queira ver o log dessas dependencias
-#    org.hibernate: INFO
+    org.springframework.web: DEBUG   # Caso queira ver o log dessas dependencias
+    org.hibernate: INFO
