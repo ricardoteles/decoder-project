@@ -3,6 +3,7 @@ package com.ead.course.controllers;
 import com.ead.course.clients.AuthUserClient;
 import com.ead.course.dtos.SubscriptionRecordDto;
 import com.ead.course.dtos.UserRecordDto;
+import com.ead.course.enums.UserStatus;
 import com.ead.course.models.CourseModel;
 import com.ead.course.models.CourseUserModel;
 import com.ead.course.services.CourseService;
@@ -24,13 +25,13 @@ import java.util.UUID;
 public class CourseUserController {
     final private CourseService courseService;
     final private CourseUserService courseUserService;
-    final private AuthUserClient userClient;
+    final private AuthUserClient authUserClient;
 
     @GetMapping("/courses/{courseId}/users")
     public ResponseEntity<Page<UserRecordDto>> getAllUsersByCourse(
             @PageableDefault(sort = "userId", direction = Sort.Direction.ASC) Pageable pageable,
             @PathVariable(value = "courseId") UUID courseId) {
-        return ResponseEntity.status(HttpStatus.OK).body(userClient.getAllUsersByCourse(courseId, pageable));
+        return ResponseEntity.status(HttpStatus.OK).body(authUserClient.getAllUsersByCourse(courseId, pageable));
     }
 
     @PostMapping("/courses/{courseId}/users/subscription")
@@ -43,7 +44,10 @@ public class CourseUserController {
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Subscription already exists!");
         }
 
-        // TODO: user verification
+        ResponseEntity<UserRecordDto> responseUser = authUserClient.getOneUserById(subscriptionRecordDto.userId());
+        if(responseUser.getBody().userStatus().equals(UserStatus.BLOCKED)) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: User is blocked.");
+        }
 
         CourseUserModel courseUserModel = courseModel.convertToCourseUserModel(subscriptionRecordDto.userId());
 
