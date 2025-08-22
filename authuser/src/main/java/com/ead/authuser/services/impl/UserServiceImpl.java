@@ -1,5 +1,6 @@
 package com.ead.authuser.services.impl;
 
+import com.ead.authuser.clients.CourseClient;
 import com.ead.authuser.dtos.UserRecordDto;
 import com.ead.authuser.enums.UserStatus;
 import com.ead.authuser.enums.UserType;
@@ -27,6 +28,7 @@ import java.util.UUID;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final UserCourseRepository userCourseRepository;
+    private final CourseClient courseClient;
 
     @Override
     public List<UserModel> findAll() {
@@ -42,12 +44,19 @@ public class UserServiceImpl implements UserService {
     @Transactional
     @Override
     public void delete(UserModel userModel) {
+        boolean deleteUserCourseInCourse = false;
+
         List<UserCourseModel> userCourseModelList = userCourseRepository.findAllUserCourseIntoUser(userModel.getUserId());
         if(!userCourseModelList.isEmpty()) {
             userCourseRepository.deleteAll(userCourseModelList);
+            deleteUserCourseInCourse = true;
         }
 
         userRepository.delete(userModel);
+
+        if(deleteUserCourseInCourse) {
+            courseClient.deleteUserCourseInCourse(userModel.getUserId());
+        }
     }
 
     @Override
