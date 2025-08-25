@@ -7,19 +7,19 @@ spring:
   application:
     name: ead-authuser-service
   datasource:
-    url: jdbc:postgresql://localhost:5432/ead-authuser
+    url: jdbc:postgresql://localhost:5432/ead-authuser-v2
     username: postgres
     password: admin
     driver-class-name: org.postgresql.Driver
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
-      jdbc:
-        lob.non-contextual-creation: true
+    show-sql: true
     properties:
       hibernate:
-        show-sql: true
+        jdbc:
+          lob:
+            non-contextual-creation: true
   output:
     ansi:
       enabled: Always       # mostra o console com letras coloridas
