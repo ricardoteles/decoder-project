@@ -24,12 +24,21 @@ spring:
     ansi:
       enabled: Always       # mostra o console com letras coloridas
   rabbitmq:
-    address: amqps://dmzqktbw:qYBoCh_nC6gqUTVxiOTgdIwwXFf4-q-m@shark.rmq.cloudamqp.com/dmzqktbw
+    host: shark.rmq.cloudamqp.com
+    port: 5671
+    username: dmzqktbw
+    password: qYBoCh_nC6gqUTVxiOTgdIwwXFf4-q-m
+    virtual-host: dmzqktbw
+    ssl:
+      enabled: true
 
 ead:
   api:
     url:
       course: 'http://ead-course-service/ead-course'
+  broker:
+    exchange:
+      userEvent: ead.userevent
 
 logging:
   level:
@@ -37,6 +46,8 @@ logging:
     root: INFO
     org.springframework.web: DEBUG   # Caso queira ver o log dessas dependencias
     org.hibernate: INFO
+    # org.springframework.amqp: DEBUG
+    # org.springframework.amqp.rabbit.connection: DEBUG
 
 eureka:
   client:
