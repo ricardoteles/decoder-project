@@ -1,7 +1,9 @@
 package com.ead.course.controllers;
 
 import com.ead.course.dtos.SubscriptionRecordDto;
+import com.ead.course.enums.UserStatus;
 import com.ead.course.models.CourseModel;
+import com.ead.course.models.UserModel;
 import com.ead.course.services.CourseService;
 import com.ead.course.services.UserService;
 import com.ead.course.specifications.SpecificationTemplate;
@@ -36,9 +38,19 @@ public class CourseUserController {
             @PathVariable(value = "courseId") UUID courseId,
             @RequestBody @Valid SubscriptionRecordDto subscriptionRecordDto) {
         CourseModel courseModel = courseService.findById(courseId);
+        UserModel userModel = userService.findById(subscriptionRecordDto.userId());
 
-        // verifications with state transfer
+        if(courseService.existsByCourseAndUser(courseId, subscriptionRecordDto.userId())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Subscription already exists!");
+        }
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(" "); //refactor
+        if(userModel.getUserStatus().equals(UserStatus.BLOCKED.toString())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: User is blocked.");
+        }
+
+        courseService.saveAndSendSubscriptionUserInCourse(courseModel, userModel);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Subscription created successfully");
+
     }
 }

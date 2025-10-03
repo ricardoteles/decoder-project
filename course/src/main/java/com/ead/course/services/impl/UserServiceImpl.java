@@ -1,5 +1,6 @@
 package com.ead.course.services.impl;
 
+import com.ead.course.exceptions.NotFoundException;
 import com.ead.course.models.UserModel;
 import com.ead.course.repositories.UserRepository;
 import com.ead.course.services.UserService;
@@ -31,5 +32,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void delete(UUID userId) {
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public UserModel findById(UUID userId) {
+        return userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Error: User not found."));
     }
 }

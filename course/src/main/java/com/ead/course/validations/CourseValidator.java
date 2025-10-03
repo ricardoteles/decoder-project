@@ -1,7 +1,10 @@
 package com.ead.course.validations;
 
 import com.ead.course.dtos.CourseRecordDto;
+import com.ead.course.enums.UserType;
+import com.ead.course.models.UserModel;
 import com.ead.course.services.CourseService;
+import com.ead.course.services.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
@@ -16,6 +19,7 @@ import java.util.UUID;
 public class CourseValidator implements Validator {
     private final Validator validator;
     private final CourseService courseService;
+    private final UserService userService;
 
     @Override
     public boolean supports(Class<?> clazz) {
@@ -41,12 +45,12 @@ public class CourseValidator implements Validator {
     }
 
     private void validateUserInstructor(UUID userInstructor, Errors errors) {
-//        ResponseEntity<UserRecordDto> responseUserInstructor =  authUserClient.getOneUserById(userInstructor);
-//
-//        if(responseUserInstructor.getBody().userType().equals(UserType.STUDENT) ||
-//                responseUserInstructor.getBody().userType().equals(UserType.USER)) {
-//            errors.rejectValue("userInstructor", "userInstructorError", "User must be INSTRUCTOR or ADMIN.");
-//            log.error("Error validation userInstructor: {}", userInstructor);
-//        }
+        UserModel userModel =  userService.findById(userInstructor);
+
+        if(userModel.getUserType().equals(UserType.STUDENT.toString()) ||
+               userModel.getUserType().equals(UserType.USER.toString())) {
+            errors.rejectValue("userInstructor", "userInstructorError", "User must be INSTRUCTOR or ADMIN.");
+            log.error("Error validation userInstructor: {}", userInstructor);
+        }
     }
 }
